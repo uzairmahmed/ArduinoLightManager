@@ -1,5 +1,5 @@
 void scrollNewCol(int r, int g, int b, int s) {
-  for (int x = 0; x < 59; x++) {
+  for (int x = 0; x < 60; x++) {
     strip.setPixelColor(x, r, g, b);
     delay(s);
     strip.show();
@@ -18,22 +18,22 @@ void flash(int r, int g, int b, int s) {
 }
 
 void blendscroll(int s) {
-  scrollNewCol(255, 0, 0, 1);
-  scrollNewCol(255, 100, 0, 1);
-  scrollNewCol(255, 255, 0, 1);
-  scrollNewCol(0, 255, 0, 1);
-  scrollNewCol(0, 0, 255, 1);
-  scrollNewCol(25, 25, 255, 1);
-  scrollNewCol(255, 0, 255, 1);
+  scrollNewCol(255, 0, 0, s);
+  scrollNewCol(255, 100, 0, s);
+  scrollNewCol(255, 255, 0, s);
+  scrollNewCol(0, 255, 0, s);
+  scrollNewCol(0, 0, 255, s);
+  scrollNewCol(25, 25, 255, s);
+  scrollNewCol(255, 0, 255, s);
 }
 
 void bumper(int r1, int g1, int b1, int r2, int g2, int b2, int s) {
-  for (int x = 0; x < 59; x++) {
+  for (int x = 0; x < 60; x++) {
     strip.setPixelColor(x, r1, g1, b1);
     delay(s);
     strip.show();
   }
-  for (int y = 59; y > 0; y--) {
+  for (int y = 60; y > 0; y--) {
     strip.setPixelColor(y, r2, g2, b2);
     delay(s);
     strip.show();

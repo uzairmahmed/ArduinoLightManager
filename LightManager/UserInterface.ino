@@ -27,6 +27,28 @@ void navHandler( int up, int down , int left, int right, int but1, int but2)
   }
 }
 
+void changeSetting() {
+  if (input == 8) {
+    lightSpeed += 10;
+  }
+  else if (input == 2) {
+    lightSpeed -= 10;
+  }
+  else if (input == 7) {
+    color1Index += 1;
+    if (color1Index == 15) {
+      // color1Index = 0;
+      // }
+    }
+    else if (input == 9) {
+      color2Index += 1;
+      if (color2Index == 15) {
+        color2Index = 0;
+      }
+    }
+  }
+}
+
 void arrowChars() {
   lcd.setCursor(15, 0);
   lcd.write(1);
@@ -82,9 +104,14 @@ void menuManager() {
     navHandler(5, 7, -9, 16, -9, -9);
   } else if (uiState == 7) {
     lcd.clear();
-    lcd.print("-END-");
+    lcd.print("-Settings Below-");
     arrowChars();
     navHandler(6, 8, -9, -9, -9, -9);
+  } else if (uiState == 8) {
+    lcd.clear();
+    lcd.print("Set Values");
+    arrowChars();
+    navHandler(7, 1, -9, 18, -9, -9);
   }
 }
 
@@ -122,6 +149,13 @@ void settingManager() {
     lightMode = 5;
     //arrowChars();
     navHandler(-9, -9, 6, -9, 26, 36);
-  } 
+  } else if (uiState == 18) {
+    lcd.clear();
+    printValues();
+    changeSetting();
+    lightMode = 5;
+    //arrowChars();
+    navHandler(-9, -9, 7, -9, 28, 38);
+  }
 }
 
