@@ -27,7 +27,7 @@ void blendscroll(int s) {
   scrollNewCol(255, 0, 255, s);
 }
 
-void bumper(int r1,int g1,int b1,int r2,int g2,int b2,int s) {
+void bumper(int r1, int g1, int b1, int r2, int g2, int b2, int s) {
   for (int x = 0; x < 59; x++) {
     strip.setPixelColor(x, r1, g1, b1);
     delay(s);
@@ -42,15 +42,15 @@ void bumper(int r1,int g1,int b1,int r2,int g2,int b2,int s) {
 
 void lightManager() {
   if (lightMode == 1) {
-    solid(r1,g1,b1);
+    solid(r1, g1, b1);
   } else if (lightMode == 2) {
-    flash(r1,g1,b1,lightSpeed);
+    flash(r1, g1, b1, lightSpeed);
   } else if (lightMode == 3) {
-    blendscroll(lightSpeed/5);
+    blendscroll(lightSpeed / 5);
   } else if (lightMode == 4) {
-    blendscroll(lightSpeed*2);
+    blendscroll(lightSpeed * 2);
   } else if (lightMode == 5) {
-    bumper(r1,g1,b1,r2,g2,b2,lightSpeed);
+    bumper(r1, g1, b1, r2, g2, b2, lightSpeed);
   }
 }
 

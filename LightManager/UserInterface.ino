@@ -39,11 +39,11 @@ void arrowChars() {
   lcd.home();
 }
 
-void printValues(){
-    lcd.setCursor(0,0);
-    lcd.print("S: " + (String)lightSpeed);
-    lcd.setCursor(0,1);
-    lcd.print("C: "+col1Name + "," + col2Name);
+void printValues() {
+  lcd.setCursor(0, 0);
+  lcd.print("S: " + (String)lightSpeed);
+  lcd.setCursor(0, 1);
+  lcd.print("C: " + col1Name + "," + col2Name);
 }
 
 void menuManager() {
@@ -82,23 +82,21 @@ void menuManager() {
     navHandler(5, 7, -9, 16, -9, -9);
   } else if (uiState == 7) {
     lcd.clear();
-    lcd.print("-END OF LIST-");
+    lcd.print("-END-");
     arrowChars();
-    navHandler(6, 1, -9, -9, -9, -9);
+    navHandler(6, 8, -9, -9, -9, -9);
   }
 }
 
 void settingManager() {
   if (uiState == 11) {
     lcd.clear();
-    //printValues();
-   // arrowChars();
+    lcd.print("By Uzair Ahmed");
     navHandler(-9, -9, 1, -9, -9, -9);
   } else if (uiState == 12) {
     lcd.clear();
     printValues();
     lightMode = 1;
-    //arrowChars();
     navHandler(-9, -9, 2, -9, 22, 32);
   } else if (uiState == 13) {
     lcd.clear();
@@ -124,32 +122,6 @@ void settingManager() {
     lightMode = 5;
     //arrowChars();
     navHandler(-9, -9, 6, -9, 26, 36);
-  }
-}
-
-void controlManager() {
-  if (uiState == 22) {
-    navHandler(-9, -9, 12, -9, -9, -9);
-  } else if (uiState == 23) {
-    navHandler(-9, -9, 13, -9, -9, -9);
-  } else if (uiState == 24) {
-    navHandler(-9, -9, 14, -9, -9, -9);
-  } else if (uiState == 25) {
-    navHandler(-9, -9, 15, -9, -9, -9);
-  } else if (uiState == 26) {
-    navHandler(-9, -9, 16, -9, -9, -9);
-  }
-
-  else if (uiState == 32) {
-    navHandler(-9, -9, 12, -9, -9, -9);
-  } else if (uiState == 33) {
-    navHandler(-9, -9, 13, -9, -9, -9);
-  } else if (uiState == 34) {
-    navHandler(-9, -9, 14, -9, -9, -9);
-  } else if (uiState == 35) {
-    navHandler(-9, -9, 15, -9, -9, -9);
-  } else if (uiState == 36) {
-    navHandler(-9, -9, 16, -9, -9, -9);
-  }
+  } 
 }
 
