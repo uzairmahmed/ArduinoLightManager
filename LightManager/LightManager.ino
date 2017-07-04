@@ -11,8 +11,8 @@ LiquidCrystal lcd(2, 3, 4, 5, 6, 7); // Declare LCD's  RS, EN, D4, D5, D6, D7 pi
 int input = 0;
 int uiState = 1;
 int lightMode = 0;
-int lightSpeed = 50;
-int color1Index = 0; int color2Index = 0;
+int lightSpeed = 15;
+int color1Index = 0; int color2Index = 4;
 int r1 = 0 ; int g1 = 0; int b1 = 0; String col1Name = "null";
 int r2 = 0; int g2 = 0; int b2 = 0; String col2Name = "null";
 
@@ -40,7 +40,7 @@ void setup() {
 
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
-  strip.setBrightness(32);
+  strip.setBrightness(150);
 }
 
 
