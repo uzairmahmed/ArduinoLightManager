@@ -1,41 +1,48 @@
-#include <LiquidCrystal.h> // Import LiquidCrystal Library for LCD display
 #include <Adafruit_NeoPixel.h>
 
-#include <Wire.h>
+#define PIXEL_PIN    9    // Digital IO pin connected to the NeoPixels.
 
-#define PIN 9
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, PIN, NEO_GRB + NEO_KHZ800);
-LiquidCrystal lcd(2, 3, 4, 5, 6, 7); // Declare LCD's  RS, EN, D4, D5, D6, D7 pins, respectively.
+#define PIXEL_COUNT 60
 
-int buttonPin = 11;
-int input = 0;
-int state = 1;
-int lightMode = 0;
-int lightSpeed = 10;
-int buttonState = 0;
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
-
-int r1 = 0 ; int g1 = 0; int b1 = 0; String col1Name = "null";
-int r2 = 0; int g2 = 0; int b2 = 0; String col2Name = "null"; 
-
-void setup() {
-  lcd.begin(16, 2); // Initialize LCD's 16 columns and 2 rows of pixels.
-  lcd.print("Welcome.");
-
-  Serial.begin(9600); // Begin Serial Monitor
-  Serial.println("Start"); // Print Serial Confirmation
-
-  pinMode(buttonPin,INPUT);
-  
+void setup() {  
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
-  strip.setBrightness(150);
+  strip.setBrightness(100);
 }
-
 
 void loop() {
-  lightManager();
-  colorManager();
+  for (int x = 0; x < 60; x++) {
+    strip.setPixelColor(x, c[0], c[1], c[2]);
+    delay(s);
+    strip.show();
+  }
+  //blendscroll(1);
 }
 
 
+void scrollNewCol(int c[], int s) {
+  for (int x = 0; x < 60; x++) {
+    strip.setPixelColor(x, c[0], c[1], c[2]);
+    delay(s);
+    strip.show();
+  }
+}
+
+int DGre [3] = {  0, 117,  19};
+int Razz [3] = {227,  11,  92};
+int  Red [3] = {255,   0,   0};
+int Yell [3] = {255, 255,   0};
+int Blue [3] = {  0,   0, 255};
+int LBlu [3] = {  0, 255, 255};
+int REE [3] = {  255, 0,255};
+
+void blendscroll(int s) {
+  scrollNewCol(Red, s);
+  scrollNewCol(Yell, s);
+  scrollNewCol(DGre, s);
+  scrollNewCol(LBlu, s);
+  scrollNewCol(Blue, s);
+  scrollNewCol(Razz, s);
+}
