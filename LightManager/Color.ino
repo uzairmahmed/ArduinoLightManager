@@ -6,7 +6,8 @@ int DOran [4] = {255, 127, 0, 12};    int OrRed [4] = {255, 69, 0, 13};   int Re
 int DRed [4] = {139, 0, 0, 15};     //int DarkBlack [3]= {-255,-255,-255}; <--Thats a joke dont worry.
 
 int* colors[16] = {Razz, Mage, Purp, LPurp, Blue, RBlu, Turq, DGre, Gree, Lime, Yell, Oran, DOran, OrRed, Red, DRed};
-int color1Index = 0; int color2Index = 0;
+int color1Index = 0;int color2Index = 0;
+
 
 void setColName(int colArray, int index, String colName) {
   if (colArray == 0) {
@@ -37,5 +38,9 @@ void colorManager() {
   setColName(1,1,"Mage"); setColName(1,5,"RBlu"); setColName(1,9,"Lime"); setColName(1,13,"OrRed");
   setColName(1,2,"Purp"); setColName(1,6,"Turq"); setColName(1,10,"Yell"); setColName(1,14,"Red");
   setColName(1,3,"LPurp"); setColName(1,7,"DGre"); setColName(1,11,"Oran"); setColName(1,15,"DRed");
+
+  if (color1Index == 16){
+    color1Index = 0;
+  }
 }
 
