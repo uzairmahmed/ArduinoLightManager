@@ -5,7 +5,9 @@
     "traits": [
       "action.devices.traits.OnOff",
       "action.devices.traits.Brightness",
-      "action.devices.traits.ColorSetting"
+      "action.devices.traits.ColorSetting",
+      "action.devices.traits.ColorSpectrum",
+      "action.devices.traits.LightEffects"
     ],
     "name": {
       "defaultNames": [

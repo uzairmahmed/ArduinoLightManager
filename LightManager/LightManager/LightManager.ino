@@ -53,7 +53,7 @@ int clr;
 
 void setup() {
 
-  Serial.begin(9600);
+  Serial.begin(115200);
   EEPROM.begin(256);
   EEPROM.get(Bri_Address, bri);
   EEPROM.get(Clr_Address, clr);
@@ -62,7 +62,7 @@ void setup() {
   strip.fill(clr);
   strip.setBrightness(bri);
   strip.show();
-  Serial.println("Current values: "+String(bri)+","+String(clr));
+  Serial.println("Current values: "+String(bri)+" , "+String(clr));
 
   //WiFi Manager
   WiFiManager wifiManager;
@@ -100,7 +100,7 @@ void loop() {
         EEPROM.put(Bri_Address, bri);
         EEPROM.commit();
         EEPROM.end();
-        Serial.println(bri);
+        Serial.println(String(bri) + " BRIGHTNESS");
       }
       else if (path == "/OnOff") {
         bool lightstatus = Firebase.getBool("/" + STRMDEVID + "/OnOff/on");
@@ -114,7 +114,7 @@ void loop() {
           strip.setBrightness(bri);
           strip.show();
         }
-        Serial.println(lightstatus);
+        Serial.println(String(lightstatus) + " STATUS");
       }
       else if (path == "/ColorSetting") {
         String colorname = Firebase.getString("/" + STRMDEVID + "/1/ColorSetting/color/name");
@@ -122,19 +122,20 @@ void loop() {
         String colors = event.getJsonVariant("data");
         if (colors.indexOf("temperature") != -1) {
           int colortemp = Firebase.getInt("/" + STRMDEVID + "/1/ColorSetting/color/temperature");
+          
           for (int i = 1; i <= 111; i++) {
             if (colortemp == Temperature[i]) {
-            int colorhex = Hexcolor[i];
-            clr = colorhex;
-            strip.fill(clr);
-            strip.show();
-            EEPROM.put(Clr_Address, clr);
-            EEPROM.commit();
-            EEPROM.end();
+              int colorhex = Hexcolor[i];
+              clr = colorhex;
+              strip.fill(clr);
+              strip.show();
+              EEPROM.put(Clr_Address, clr);
+              EEPROM.commit();
+              EEPROM.end();
               break;
             }
           }
-          Serial.println(clr);
+          Serial.println(String(clr) + " TEMPERATURE");
         } else if (colors.indexOf("spectrumRGB") != -1) {
           int colordec = Firebase.getInt("/" + STRMDEVID + "/ColorSetting/color/spectrumRGB");
           clr = colordec;
@@ -143,7 +144,7 @@ void loop() {
           EEPROM.put(Clr_Address, clr);
           EEPROM.commit();
           EEPROM.end();
-          Serial.println(clr);
+          Serial.println(String(clr) + " COLOR");
         }
       }
     }
