@@ -117,18 +117,20 @@ void loop() {
         Serial.println(String(lightstatus) + " STATUS");
       }
       else if (path == "/ColorSetting") {
-        String colorname = Firebase.getString("/" + STRMDEVID + "/1/ColorSetting/color/name");
+        String colorname = Firebase.getString("/" + STRMDEVID + "/ColorSetting/color/name");
         Serial.println(colorname);
         String colors = event.getJsonVariant("data");
         if (colors.indexOf("temperature") != -1) {
-          int colortemp = Firebase.getInt("/" + STRMDEVID + "/1/ColorSetting/color/temperature");
-          
+          int colortemp = Firebase.getInt("/" + STRMDEVID + "/ColorSetting/color/temperature");
+          Serial.println(colortemp);
           for (int i = 1; i <= 111; i++) {
             if (colortemp == Temperature[i]) {
+              
               int colorhex = Hexcolor[i];
               clr = colorhex;
-              strip.fill(clr);
-              strip.show();
+//              strip.fill(clr);
+//              strip.show();
+              colorFade(clr);
               EEPROM.put(Clr_Address, clr);
               EEPROM.commit();
               EEPROM.end();
@@ -139,8 +141,9 @@ void loop() {
         } else if (colors.indexOf("spectrumRGB") != -1) {
           int colordec = Firebase.getInt("/" + STRMDEVID + "/ColorSetting/color/spectrumRGB");
           clr = colordec;
-          strip.fill(clr);
-          strip.show();
+          //strip.fill(clr);
+          //strip.show();
+          colorFade(clr);
           EEPROM.put(Clr_Address, clr);
           EEPROM.commit();
           EEPROM.end();
@@ -148,5 +151,26 @@ void loop() {
         }
       }
     }
+  }
+}
+
+void colorFade(int c) {
+  uint8_t b = c % 256;
+  uint8_t g = ((c-b)/256) % 256;
+  uint8_t r = ((c-b)/pow(256,2)) - r/256;
+      uint8_t curr_r, curr_g, curr_b;
+      uint32_t curr_col = strip.getPixelColor(0); // get the current colour
+      curr_b = curr_col & 0xFF; 
+      curr_g = (curr_col >> 8) & 0xFF; 
+      curr_r = (curr_col >> 16) & 0xFF;  // separate into RGB components
+
+      while ((curr_r != r) || (curr_g != g) || (curr_b != b)){  // while the curr color is not yet the target color
+        if (curr_r < r) curr_r++; else if (curr_r > r) curr_r--;  // increment or decrement the old color values
+        if (curr_g < g) curr_g++; else if (curr_g > g) curr_g--;
+        if (curr_b < b) curr_b++; else if (curr_b > b) curr_b--;
+        uint32_t color = (curr_r<<16) + (curr_g<<8) + (curr_b);
+        strip.fill(color);  // set the color
+        strip.show();
+        delay(1);  // add a delay if its too fast
   }
 }

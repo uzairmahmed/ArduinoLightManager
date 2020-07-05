@@ -53,7 +53,7 @@ Steps Followed:
 # Deploy NodeMCU
 1. Download the git repository at [FirebaseExtended/firebase-arduino](https://github.com/FirebaseExtended/firebase-arduino )
 1. Start Arduino
-1. go to (ARDUNIO FILE)
+1. go to (ARDUINO FILE)
 1. Go to `Tools > Library Manager` and get `ArduinoJSON v5.13`, `WiFiManager`, `Adafruit_Neopixel`
 1. Go to `Sketch > Include Library > Add ZIP Library`
 1. replace `FIREBASE_URL` with the Firebase URL from the previous step

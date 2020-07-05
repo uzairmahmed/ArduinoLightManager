@@ -17,7 +17,7 @@
 'use strict';
 
 const functions = require('firebase-functions');
-const {smarthome} = require('actions-on-google');
+const { smarthome } = require('actions-on-google');
 const util = require('util');
 const admin = require('firebase-admin');
 // Initialize Firebase
@@ -79,21 +79,17 @@ var devicecounter;
 
 app.onSync((body) => {
   for (devicecounter = 0; devicecounter < deviceitems.length; devicecounter++) {
-    if (deviceitems[devicecounter].traits.includes('action.devices.traits.TemperatureSetting')) {
-      if (deviceitems[devicecounter].attributes.queryOnlyTemperatureSetting == true) {
-        firebaseRef.child(deviceitems[devicecounter].id).child('TemperatureSetting').set({thermostatMode: "off", thermostatTemperatureAmbient: 20, thermostatHumidityAmbient: 90});
-      } else if (deviceitems[devicecounter].attributes.queryOnlyTemperatureSetting == false) {
-        firebaseRef.child(deviceitems[devicecounter].id).child('TemperatureSetting').set({thermostatMode: "off", thermostatTemperatureSetpoint: 25.5, thermostatTemperatureAmbient: 20, thermostatHumidityAmbient: 90, thermostatTemperatureSetpointLow: 15, thermostatTemperatureSetpointHigh: 30});
-      }
-    }
     if (deviceitems[devicecounter].traits.includes('action.devices.traits.OnOff')) {
-      firebaseRef.child(deviceitems[devicecounter].id).child('OnOff').set({on: false});
+      firebaseRef.child(deviceitems[devicecounter].id).child('OnOff').set({ on: false });
     }
     if (deviceitems[devicecounter].traits.includes('action.devices.traits.Brightness')) {
-      firebaseRef.child(deviceitems[devicecounter].id).child('Brightness').set({brightness: 10});
+      firebaseRef.child(deviceitems[devicecounter].id).child('Brightness').set({ brightness: 25 });
     }
     if (deviceitems[devicecounter].traits.includes('action.devices.traits.ColorSetting')) {
-      firebaseRef.child(deviceitems[devicecounter].id).child('ColorSetting').set({color: {name: "deep sky blue", spectrumRGB: 49151}});
+      firebaseRef.child(deviceitems[devicecounter].id).child('ColorSetting').set({ color: { name: "daylight", temperatureK: 5000 } });
+    }
+    if (deviceitems[devicecounter].traits.includes('action.devices.traits.LightEffects')) {
+      firebaseRef.child(deviceitems[devicecounter].id).child('LightEffects').set({ activeLightEffect: "" });
     }
   }
   return {
@@ -113,38 +109,16 @@ const queryFirebase = async (deviceId) => {
   var asyncvalue = {};
 
   if (Object.prototype.hasOwnProperty.call(snapshotVal, 'OnOff')) {
-    asyncvalue = Object.assign(asyncvalue, {on: snapshotVal.OnOff.on});
+    asyncvalue = Object.assign(asyncvalue, { on: snapshotVal.OnOff.on });
   }
   if (Object.prototype.hasOwnProperty.call(snapshotVal, 'Brightness')) {
-    asyncvalue = Object.assign(asyncvalue, {brightness: snapshotVal.Brightness.brightness});
+    asyncvalue = Object.assign(asyncvalue, { brightness: snapshotVal.Brightness.brightness });
   }
   if (Object.prototype.hasOwnProperty.call(snapshotVal, 'ColorSetting')) {
-    asyncvalue = Object.assign(asyncvalue, {color: snapshotVal.ColorSetting.color});
+    asyncvalue = Object.assign(asyncvalue, { color: snapshotVal.ColorSetting.color });
   }
-  if (Object.prototype.hasOwnProperty.call(snapshotVal, 'FanSpeed')) {
-    if (Object.prototype.hasOwnProperty.call(snapshotVal.FanSpeed, 'currentFanSpeedSetting')) {
-      asyncvalue = Object.assign(asyncvalue, {currentFanSpeedSetting: snapshotVal.FanSpeed.currentFanSpeedSetting});
-    }
-  }
-  if (Object.prototype.hasOwnProperty.call(snapshotVal, 'TemperatureSetting')) {
-    if (Object.prototype.hasOwnProperty.call(snapshotVal.TemperatureSetting, 'thermostatMode')) {
-      asyncvalue = Object.assign(asyncvalue, {thermostatMode: snapshotVal.TemperatureSetting.thermostatMode});
-    }
-    if (Object.prototype.hasOwnProperty.call(snapshotVal.TemperatureSetting, 'thermostatTemperatureSetpoint')) {
-      asyncvalue = Object.assign(asyncvalue, {thermostatTemperatureSetpoint: snapshotVal.TemperatureSetting.thermostatTemperatureSetpoint});
-    }
-    if (Object.prototype.hasOwnProperty.call(snapshotVal.TemperatureSetting, 'thermostatTemperatureAmbient')) {
-      asyncvalue = Object.assign(asyncvalue, {thermostatTemperatureAmbient: snapshotVal.TemperatureSetting.thermostatTemperatureAmbient});
-    }
-    if (Object.prototype.hasOwnProperty.call(snapshotVal.TemperatureSetting, 'thermostatHumidityAmbient')) {
-      asyncvalue = Object.assign(asyncvalue, {thermostatHumidityAmbient: snapshotVal.TemperatureSetting.thermostatHumidityAmbient});
-    }
-    if (Object.prototype.hasOwnProperty.call(snapshotVal.TemperatureSetting, 'thermostatTemperatureSetpointLow')) {
-      asyncvalue = Object.assign(asyncvalue, {thermostatTemperatureSetpointLow: snapshotVal.TemperatureSetting.thermostatTemperatureSetpointLow});
-    }
-    if (Object.prototype.hasOwnProperty.call(snapshotVal.TemperatureSetting, 'thermostatTemperatureSetpointHigh')) {
-      asyncvalue = Object.assign(asyncvalue, {thermostatTemperatureSetpointHigh: snapshotVal.TemperatureSetting.thermostatTemperatureSetpointHigh});
-    }
+  if (Object.prototype.hasOwnProperty.call(snapshotVal, 'LightEffects')) {
+    asyncvalue = Object.assign(asyncvalue, { activeLightEffect: snapshotVal.LightEffects.activeLightEffect });
   }
   return asyncvalue;
 }
@@ -155,40 +129,22 @@ const queryDevice = async (deviceId) => {
   var datavalue = {};
 
   if (Object.prototype.hasOwnProperty.call(data, 'on')) {
-    datavalue = Object.assign(datavalue, {on: data.on});
+    datavalue = Object.assign(datavalue, { on: data.on });
   }
   if (Object.prototype.hasOwnProperty.call(data, 'brightness')) {
-    datavalue = Object.assign(datavalue, {brightness: data.brightness});
+    datavalue = Object.assign(datavalue, { brightness: data.brightness });
   }
   if (Object.prototype.hasOwnProperty.call(data, 'color')) {
-    datavalue = Object.assign(datavalue, {color: data.color});
+    datavalue = Object.assign(datavalue, { color: data.color });
   }
-  if (Object.prototype.hasOwnProperty.call(data, 'currentFanSpeedSetting')) {
-    datavalue = Object.assign(datavalue, {currentFanSpeedSetting: data.currentFanSpeedSetting});
-  }
-  if (Object.prototype.hasOwnProperty.call(data, 'thermostatMode')) {
-    datavalue = Object.assign(datavalue, {thermostatMode: data.thermostatMode});
-  }
-  if (Object.prototype.hasOwnProperty.call(data, 'thermostatTemperatureSetpoint')) {
-    datavalue = Object.assign(datavalue, {thermostatTemperatureSetpoint: data.thermostatTemperatureSetpoint});
-  }
-  if (Object.prototype.hasOwnProperty.call(data, 'thermostatTemperatureAmbient')) {
-    datavalue = Object.assign(datavalue, {thermostatTemperatureAmbient: data.thermostatTemperatureAmbient});
-  }
-  if (Object.prototype.hasOwnProperty.call(data, 'thermostatHumidityAmbient')) {
-    datavalue = Object.assign(datavalue, {thermostatHumidityAmbient: data.thermostatHumidityAmbient});
-  }
-  if (Object.prototype.hasOwnProperty.call(data, 'thermostatTemperatureSetpointLow')) {
-    datavalue = Object.assign(datavalue, {thermostatTemperatureSetpointLow: data.thermostatTemperatureSetpointLow});
-  }
-  if (Object.prototype.hasOwnProperty.call(data, 'thermostatTemperatureSetpointHigh')) {
-    datavalue = Object.assign(datavalue, {thermostatTemperatureSetpointHigh: data.thermostatTemperatureSetpointHigh});
+  if (Object.prototype.hasOwnProperty.call(data, 'activeLightEffect')) {
+    datavalue = Object.assign(datavalue, { activeLightEffect: data.activeLightEffect });
   }
   return datavalue;
 }
 
 app.onQuery(async (body) => {
-  const {requestId} = body;
+  const { requestId } = body;
   const payload = {
     devices: {},
   };
@@ -202,7 +158,7 @@ app.onQuery(async (body) => {
         // Add response to device payload
         payload.devices[deviceId] = data;
       }
-    ));
+      ));
   }
   // Wait for all promises to resolve
   await Promise.all(queryPromises)
@@ -212,44 +168,45 @@ app.onQuery(async (body) => {
   };
 });
 
-const updateDevice = async (execution,deviceId) => {
-  const {params,command} = execution;
+const updateDevice = async (execution, deviceId) => {
+  const { params, command } = execution;
   let state, ref;
   switch (command) {
     case 'action.devices.commands.OnOff':
-      state = {on: params.on};
+      state = { on: params.on };
       ref = firebaseRef.child(deviceId).child('OnOff');
       break;
     case 'action.devices.commands.BrightnessAbsolute':
-      state = {brightness: params.brightness};
+      state = { brightness: params.brightness };
       ref = firebaseRef.child(deviceId).child('Brightness');
       break;
     case 'action.devices.commands.ColorAbsolute':
-      state = {color: params.color};
+      state = { color: params.color };
       ref = firebaseRef.child(deviceId).child('ColorSetting');
       break;
-    case 'action.devices.commands.SetFanSpeed':
-      state = {currentFanSpeedSetting: params.fanSpeed};
-      ref = firebaseRef.child(deviceId).child('FanSpeed');
+    case 'action.devices.commands.ColorLoop':
+      state = { activeLightEffect: params.activeLightEffect };
+      ref = firebaseRef.child(deviceId).child('LightEffects');
       break;
-    case 'action.devices.commands.ThermostatTemperatureSetpoint':
-      state = {thermostatTemperatureSetpoint: params.thermostatTemperatureSetpoint};
-      ref = firebaseRef.child(deviceId).child('TemperatureSetting');
+    case 'action.devices.commands.Sleep':
+      state = { activeLightEffect: params.activeLightEffect };
+      ref = firebaseRef.child(deviceId).child('LightEffects');
       break;
-    case 'action.devices.commands.ThermostatSetMode':
-      state = {thermostatMode: params.thermostatMode};
-      ref = firebaseRef.child(deviceId).child('TemperatureSetting');
+    case 'action.devices.commands.StopEffect':
+      state = { activeLightEffect: params.activeLightEffect };
+      ref = firebaseRef.child(deviceId).child('LightEffects');
       break;
-    case 'action.devices.commands.ThermostatTemperatureSetRange':
-      state = {thermostatTemperatureSetpointLow: params.thermostatTemperatureSetpointLow,thermostatTemperatureSetpointHigh: params.thermostatTemperatureSetpointHigh};
-      ref = firebaseRef.child(deviceId).child('TemperatureSetting');
+    case 'action.devices.commands.Wake':
+      state = { activeLightEffect: params.activeLightEffect };
+      ref = firebaseRef.child(deviceId).child('LightEffects');
+      break;
   }
   return ref.update(state)
     .then(() => state);
 };
 
 app.onExecute(async (body) => {
-  const {requestId} = body;
+  const { requestId } = body;
   // Execution results are grouped by status
   const result = {
     ids: [],
@@ -265,7 +222,7 @@ app.onExecute(async (body) => {
     for (const device of command.devices) {
       for (const execution of command.execution) {
         executePromises.push(
-          updateDevice(execution,device.id)
+          updateDevice(execution, device.id)
             .then((data) => {
               result.ids.push(device.id);
               Object.assign(result.states, data);
@@ -317,38 +274,16 @@ exports.reportstate = functions.database.ref('{deviceId}').onWrite(async (change
   var syncvalue = {};
 
   if (Object.prototype.hasOwnProperty.call(snapshot, 'OnOff')) {
-    syncvalue = Object.assign(syncvalue, {on: snapshot.OnOff.on});
+    syncvalue = Object.assign(syncvalue, { on: snapshot.OnOff.on });
   }
   if (Object.prototype.hasOwnProperty.call(snapshot, 'Brightness')) {
-    syncvalue = Object.assign(syncvalue, {brightness: snapshot.Brightness.brightness});
+    syncvalue = Object.assign(syncvalue, { brightness: snapshot.Brightness.brightness });
   }
   if (Object.prototype.hasOwnProperty.call(snapshot, 'ColorSetting')) {
-    syncvalue = Object.assign(syncvalue, {color: snapshot.ColorSetting.color});
+    syncvalue = Object.assign(syncvalue, { color: snapshot.ColorSetting.color });
   }
-  if (Object.prototype.hasOwnProperty.call(snapshot, 'FanSpeed')) {
-    if (Object.prototype.hasOwnProperty.call(snapshot.FanSpeed, 'currentFanSpeedSetting')) {
-      syncvalue = Object.assign(syncvalue, {currentFanSpeedSetting: snapshot.FanSpeed.currentFanSpeedSetting});
-    }
-  }
-  if (Object.prototype.hasOwnProperty.call(snapshot, 'TemperatureSetting')) {
-    if (Object.prototype.hasOwnProperty.call(snapshot.TemperatureSetting, 'thermostatMode')) {
-      syncvalue = Object.assign(syncvalue, {thermostatMode: snapshot.TemperatureSetting.thermostatMode});
-    }
-    if ("thermostatTemperatureSetpoint" in snapshot) {
-      syncvalue = Object.assign(syncvalue, {thermostatTemperatureSetpoint: snapshot.TemperatureSetting.thermostatTemperatureSetpoint});
-    }
-    if ("thermostatTemperatureAmbient" in snapshot) {
-      syncvalue = Object.assign(syncvalue, {thermostatTemperatureAmbient: snapshot.TemperatureSetting.thermostatTemperatureAmbient});
-    }
-    if ('thermostatHumidityAmbient' in snapshot) {
-      syncvalue = Object.assign(syncvalue, {thermostatHumidityAmbient: snapshot.TemperatureSetting.thermostatHumidityAmbient});
-    }
-    if ('thermostatTemperatureSetpointLow' in snapshot) {
-      syncvalue = Object.assign(syncvalue, {thermostatTemperatureSetpointLow: snapshot.TemperatureSetting.thermostatTemperatureSetpointLow});
-    }
-    if ('thermostatTemperatureSetpointHigh' in snapshot) {
-      syncvalue = Object.assign(syncvalue, {thermostatTemperatureSetpointHigh: snapshot.TemperatureSetting.thermostatTemperatureSetpointHigh});
-    }
+  if (Object.prototype.hasOwnProperty.call(snapshot, 'LightEffects')) {
+    syncvalue = Object.assign(syncvalue, { activeLightEffect: snapshot.LightEffects.activeLightEffect });
   }
 
   const postData = {
