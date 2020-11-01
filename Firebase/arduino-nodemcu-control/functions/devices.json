@@ -1,0 +1,131 @@
+﻿[
+  {
+    "id": "1",
+    "type": "action.devices.types.LIGHT",
+    "traits": [
+      "action.devices.traits.OnOff",
+      "action.devices.traits.Brightness",
+      "action.devices.traits.ColorSetting",
+      "action.devices.traits.LightEffects"
+    ],
+    "name": {
+      "defaultNames": [
+        "Light Strip"
+      ],
+      "name": "Light Strip",
+      "nicknames": [
+        "Desk Strip"
+      ]
+    },
+    "deviceInfo": {
+      "manufacturer": "Uzair Ahmed",
+      "model": "LightStripV11",
+      "hwVersion": "1.0",
+      "swVersion": "1.1"
+    },
+    "willReportState": true,
+    "attributes": {
+      "commandOnlyOnOff": false,
+      "commandOnlyColorSetting": false,
+      "commandOnlyBrightness": false,
+      "colorModel": "rgb",
+      "colorTemperatureRange": {
+        "temperatureMinK": 2000,
+        "temperatureMaxK": 6500
+      },
+      "defaultSleepDuration": 600,
+      "defaultWakeDuration": 300,
+      "supportedEffects": [
+        "colorLoop",
+        "sleep",
+        "wake"
+      ]
+    }
+  },
+  {
+    "id": "2",
+    "type": "action.devices.types.LIGHT",
+    "traits": [
+      "action.devices.traits.OnOff",
+      "action.devices.traits.Brightness",
+      "action.devices.traits.ColorSetting",
+      "action.devices.traits.LightEffects"
+    ],
+    "name": {
+      "defaultNames": [
+        "Light Strip"
+      ],
+      "name": "Light Strip",
+      "nicknames": [
+        "Desk Strip 2"
+      ]
+    },
+    "deviceInfo": {
+      "manufacturer": "Uzair Ahmed",
+      "model": "LightStripV11",
+      "hwVersion": "1.2",
+      "swVersion": "1.1"
+    },
+    "willReportState": true,
+    "attributes": {
+      "commandOnlyOnOff": false,
+      "commandOnlyColorSetting": false,
+      "commandOnlyBrightness": false,
+      "colorModel": "rgb",
+      "colorTemperatureRange": {
+        "temperatureMinK": 2000,
+        "temperatureMaxK": 6500
+      },
+      "defaultSleepDuration": 600,
+      "defaultWakeDuration": 300,
+      "supportedEffects": [
+        "colorLoop",
+        "sleep",
+        "wake"
+      ]
+    }
+  },
+  {
+    "id": "3",
+    "type": "action.devices.types.LIGHT",
+    "traits": [
+      "action.devices.traits.OnOff",
+      "action.devices.traits.Brightness",
+      "action.devices.traits.ColorSetting",
+      "action.devices.traits.LightEffects"
+    ],
+    "name": {
+      "defaultNames": [
+        "Light Strip"
+      ],
+      "name": "Light Strip",
+      "nicknames": [
+        "Bed Strip"
+      ]
+    },
+    "deviceInfo": {
+      "manufacturer": "Uzair Ahmed",
+      "model": "LightStripV11",
+      "hwVersion": "1.2",
+      "swVersion": "1.1"
+    },
+    "willReportState": true,
+    "attributes": {
+      "commandOnlyOnOff": false,
+      "commandOnlyColorSetting": false,
+      "commandOnlyBrightness": false,
+      "colorModel": "rgb",
+      "colorTemperatureRange": {
+        "temperatureMinK": 2000,
+        "temperatureMaxK": 6500
+      },
+      "defaultSleepDuration": 600,
+      "defaultWakeDuration": 300,
+      "supportedEffects": [
+        "colorLoop",
+        "sleep",
+        "wake"
+      ]
+    }
+  }
+]
