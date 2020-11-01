@@ -39,8 +39,8 @@ Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 #define Clr_Address Bri_Address + sizeof(int)
 
 //Firebase Database URL and KEY
-#define FIREBASE_DATABASE_URL "uzairmahmeddotcom.firebaseio.com"
-#define FIREBASE_KEY "cZmoQmq4r5ntCG8uYdR4a2qQvAPnVQZ6mwlSoU1D"
+#define FIREBASE_DATABASE_URL "FIREBASE_URL"
+#define FIREBASE_KEY "FIREBASE_KEY"
 
 //Set the ID to the device id used in the index.json file
 static const String STRMDEVID =  "3";
