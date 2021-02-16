@@ -39,11 +39,12 @@ Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 #define Clr_Address Bri_Address + sizeof(int)
 
 //Firebase Database URL and KEY
-#define FIREBASE_DATABASE_URL "FIREBASE_URL"
-#define FIREBASE_KEY "FIREBASE_KEY"
+// FIREBASE_DATABASE_URL "projectname.firebaseio.com"
+#define FIREBASE_DATABASE_URL "uzairmahmeddotcom.firebaseio.com"
+#define FIREBASE_KEY "7dMJuNJ5V17xTrgaz7NeF4nOL4VkzGj4Q4PRxu8O"
 
 //Set the ID to the device id used in the index.json file
-static const String STRMDEVID =  "3";
+static const String STRMDEVID =  "2";
 
 //Temperature in K
 int Temperature[111] = {1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900, 5000, 5100, 5200, 5300, 5400, 5500, 5600, 5700, 5800, 5900, 6000, 6100, 6200, 6300, 6400, 6500, 6600, 6700, 6800, 6900, 7000, 7100, 7200, 7300, 7400, 7500, 7600, 7700, 7800, 7900, 8000, 8100, 8200, 8300, 8400, 8500, 8600, 8700, 8800, 8900, 9000, 9100, 9200, 9300, 9400, 9500, 9600, 9700, 9800, 9900, 10000, 10100, 10200, 10300, 10400, 10500, 10600, 10700, 10800, 10900, 11000, 11100, 11200, 11300, 11400, 11500, 11600, 11700, 11800, 11900, 12000};
@@ -54,6 +55,16 @@ unsigned long Hexcolor[111] = {0xFF3800, 0xFF4700, 0xFF5300, 0xFF5D00, 0xFF6500,
 int bri;
 int clr;
 
+//GAMER VARIABLE
+bool rgbmode = false;
+
+struct firebaseEvent{ 
+  String path, eventType; 
+}; 
+
+typedef struct firebaseEvent Struct; 
+
+
 void setup() {
   //Pull Data from previous setup
   Serial.begin(115200);
@@ -63,10 +74,7 @@ void setup() {
 
   //Neopixel Initialization
   strip.begin();
-  strip.fill(clr);
-  strip.setBrightness(bri);
-  strip.show();
-  Serial.println("Current values: "+String(bri)+" , "+String(clr));
+  showLastLightSetup(bri, clr);
 
   //WiFi Manager
   WiFiManager wifiManager;
@@ -85,14 +93,25 @@ void loop() {
     Serial.println(Firebase.error());
   }
 
-  if (Firebase.available()) {
-    //Read any changes in database
+  while(rgbmode == true){
+    Serial.println("GAMER COLOR");
+    rainbowCycle(20);
     FirebaseObject event = Firebase.readEvent();
-    String eventType = event.getString("type");
-    eventType.toLowerCase();
-    Serial.println(eventType);
-    String path = event.getString("path");
-    Serial.println(path);
+    
+    String path = FirebaseListener(event).eventType; 
+    if (path == "patch"){
+      rgbmode = false;
+      Serial.println("Breaking out of Cycler");
+      showLastLightSetup(bri, clr);
+      break;
+    }
+  }
+  
+  if (Firebase.available()) {
+    FirebaseObject event = Firebase.readEvent();
+    Struct fbl = FirebaseListener(event);
+    String path = fbl.path;
+    String eventType = fbl.eventType; 
 
     if (eventType == "patch" || eventType == "put") {
       //If brightness is changed
@@ -131,20 +150,28 @@ void loop() {
         if (colors.indexOf("temperature") != -1) {
           int colortemp = Firebase.getInt("/" + STRMDEVID + "/ColorSetting/color/temperature");
           Serial.println(colortemp);
-          for (int i = 1; i <= 111; i++) {
-            if (colortemp == Temperature[i]) {
-              int colorhex = Hexcolor[i];
-              clr = colorhex;
-              colorFade(clr);
-              EEPROM.put(Clr_Address, clr);
-              EEPROM.commit();
-              EEPROM.end();
-              break;
+          Serial.println(Temperature[55]);
+          if (colortemp == Temperature[55]){
+            Serial.println("found GAMER COLOR");
+            rgbmode = true;
+          } else{
+            rgbmode = false;
+            for (int i = 1; i <= 111; i++) {
+              if (colortemp == Temperature[i]) {
+                int colorhex = Hexcolor[i];
+                clr = colorhex;
+                colorFade(clr);
+                EEPROM.put(Clr_Address, clr);
+                EEPROM.commit();
+                EEPROM.end();
+                break;
+              }
             }
+            Serial.println(String(clr) + " TEMPERATURE");
           }
-          Serial.println(String(clr) + " TEMPERATURE");
         //if the color is a real color
         } else if (colors.indexOf("spectrumRGB") != -1) {
+          rgbmode = false;
           int colordec = Firebase.getInt("/" + STRMDEVID + "/ColorSetting/color/spectrumRGB");
           clr = colordec;
           colorFade(clr);
@@ -156,6 +183,25 @@ void loop() {
       }
     }
   }
+}
+
+void showLastLightSetup(int bri, int clr){
+  strip.fill(clr);
+  strip.setBrightness(bri);
+  strip.show();
+  Serial.println("Current values: "+String(bri)+" , "+String(clr));
+}
+
+Struct FirebaseListener(FirebaseObject event){ 
+  String eventType = event.getString("type");
+  Serial.println(eventType);
+  String path = event.getString("path");
+  Serial.println(path);
+
+  Struct s;
+  s.path = path;
+  s.eventType = eventType;
+  return s;
 }
 
 // code to change fade between two colors
@@ -178,4 +224,39 @@ void colorFade(int c) {
         strip.show();
         delay(1);  // add a delay if its too fast
   }
+}
+
+void rainbowCycle(int SpeedDelay) {
+  byte *c;
+  uint16_t i, j;
+  for(j=0; j<256; j++) { // 5 cycles of all colors on wheel   
+    for(i=0; i< LED_COUNT; i++) {
+      c=Wheel(((i * 256 / LED_COUNT) + j) & 255);
+      strip.setPixelColor(i, *c, *(c+1), *(c+2));
+    }
+    strip.show();
+    delay(SpeedDelay);
+  }
+}
+
+byte * Wheel(byte WheelPos) {
+  static byte c[3];
+ 
+  if(WheelPos < 85) {
+   c[0]=WheelPos * 3;
+   c[1]=255 - WheelPos * 3;
+   c[2]=0;
+  } else if(WheelPos < 170) {
+   WheelPos -= 85;
+   c[0]=255 - WheelPos * 3;
+   c[1]=0;
+   c[2]=WheelPos * 3;
+  } else {
+   WheelPos -= 170;
+   c[0]=0;
+   c[1]=WheelPos * 3;
+   c[2]=255 - WheelPos * 3;
+  }
+
+  return c;
 }
